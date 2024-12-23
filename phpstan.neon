@@ -1,0 +1,11 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+    phpVersion: 80200
+    inferPrivatePropertyTypeFromConstructor: true
+    checkFunctionNameCase: true
+    checkInternalClassCaseSensitivity: true
+    treatPhpDocTypesAsCertain: false
+    tmpDir: .cache/phpstan
