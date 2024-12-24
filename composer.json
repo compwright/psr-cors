@@ -1,7 +1,11 @@
 {
     "name": "compwright/psr-cors",
     "description": "PHP interop cross-origin resource sharing (CORS) library and middleware",
-    "keywords": ["psr-7", "psr-15", "cors"],
+    "keywords": [
+        "psr-7",
+        "psr-15",
+        "cors"
+    ],
     "homepage": "https://github.com/compwright/psr-cors",
     "type": "library",
     "license": "MIT",
