@@ -67,10 +67,10 @@ final class Middleware implements MiddlewareInterface
             return $this->cors->handlePreflight(
                 $this->responseFactory->createResponse(),
                 $request,
-                $this->allowedOrigins ?? ['*'],
-                $this->allowedMethods ?? ['*'],
-                $this->allowedHeaders ?? ['*'],
-                $this->supportsCredentials ?? false,
+                $this->allowedOrigins,
+                $this->allowedMethods,
+                $this->allowedHeaders,
+                $this->supportsCredentials,
                 $this->maxAge ?? null
             );
         }
@@ -80,8 +80,8 @@ final class Middleware implements MiddlewareInterface
         return $this->cors->handlePostflight(
             $response,
             $request,
-            $this->allowedOrigins ?? ['*'],
-            $this->supportsCredentials ?? false,
+            $this->allowedOrigins,
+            $this->supportsCredentials,
             $this->exposedHeaders ?? []
         );
     }
