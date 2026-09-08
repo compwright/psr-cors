@@ -1,5 +1,5 @@
 test:
-	vendor/bin/phpunit
+	vendor/bin/phpunit tests --display-all-issues
 
 lint:
 	vendor/bin/phpstan analyse src tests

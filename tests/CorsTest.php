@@ -2,10 +2,9 @@
 
 namespace Compwright\PsrCors;
 
-use Generator;
 use Nyholm\Psr7\ServerRequest;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 
 class CorsTest extends TestCase
 {
@@ -16,34 +15,17 @@ class CorsTest extends TestCase
         $this->cors = new Cors();
     }
 
-    public function provideRequests(): Generator
+    #[TestWith(['GET', '/'], 'get_no_header')]
+    #[TestWith(['GET', '/', ['Access-Control-Request-Method' => 'POST']], 'get_with_header')]
+    #[TestWith(['OPTIONS', '/'], 'options_no_header')]
+    public function testNotPreflightRequest(mixed ...$args): void
     {
-        yield 'get_no_header' => [
-            new ServerRequest('GET', '/'),
-            false
-        ];
-
-        yield 'get_with_header' => [
-            new ServerRequest('GET', '/', ['Access-Control-Request-Method' => 'POST']),
-            false
-        ];
-
-        yield 'options_no_header' => [
-            new ServerRequest('OPTIONS', '/'),
-            false
-        ];
-
-        yield 'options_with_header' => [
-            new ServerRequest('OPTIONS', '/', ['Access-Control-Request-Method' => 'POST']),
-            true
-        ];
+        $this->assertFalse($this->cors->isPreflightRequest(new ServerRequest(...$args)));
     }
 
-    /**
-     * @dataProvider provideRequests
-     */
-    public function testIsPreflightRequest(ServerRequestInterface $request, bool $expected): void
+    #[TestWith(['OPTIONS', '/', ['Access-Control-Request-Method' => 'POST']])]
+    public function testIsPreflightRequest(mixed ...$args): void
     {
-        $this->assertEquals($expected, $this->cors->isPreflightRequest($request));
+        $this->assertTrue($this->cors->isPreflightRequest(new ServerRequest(...$args)));
     }
 }

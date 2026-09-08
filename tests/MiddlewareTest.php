@@ -13,10 +13,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class MiddlewareTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function it_does_modify_on_a_request_without_origin(): void
+    public function test_it_does_modify_on_a_request_without_origin(): void
     {
         $middleware = Middleware::create(new Psr17Factory());
 
@@ -28,10 +25,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('*', $response->getHeaderLine('Access-Control-Allow-Origin'));
     }
 
-    /**
-     * @test
-     */
-    public function it_does_modify_on_a_request_with_same_origin(): void
+    public function test_it_does_modify_on_a_request_with_same_origin(): void
     {
         $middleware = Middleware::create(new Psr17Factory());
 
@@ -111,10 +105,7 @@ class MiddlewareTest extends TestCase
         };
     }
 
-    /**
-     * @test
-     */
-    public function it_returns_allow_origin_header_on_valid_actual_request(): void
+    public function test_it_returns_allow_origin_header_on_valid_actual_request(): void
     {
         $app      = $this->createStackedApp();
         $request  = $this->createValidActualRequest();
@@ -125,10 +116,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('http://localhost', $response->getHeaderLine('Access-Control-Allow-Origin'));
     }
 
-    /**
-     * @test
-     */
-    public function it_returns_allow_origin_header_on_allow_all_origin_request(): void
+    public function test_it_returns_allow_origin_header_on_allow_all_origin_request(): void
     {
         $app      = $this->createStackedApp(['allowedOrigins' => ['*']]);
         $request  = $this->createValidActualRequest();
@@ -140,10 +128,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('*', $response->getHeaderLine('Access-Control-Allow-Origin'));
     }
 
-    /**
-     * @test
-     */
-    public function it_returns_allow_headers_header_on_allow_all_headers_request(): void
+    public function test_it_returns_allow_headers_header_on_allow_all_headers_request(): void
     {
         $app     = $this->createStackedApp(['allowedHeaders' => ['*'], 'supportsCredentials' => false]);
         $request = $this->createValidPreflightRequest();
@@ -156,10 +141,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('Access-Control-Request-Headers, Access-Control-Request-Method', $response->getHeaderLine('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_returns_allow_headers_header_on_allow_all_headers_request_credentials(): void
+    public function test_it_returns_allow_headers_header_on_allow_all_headers_request_credentials(): void
     {
         $app      = $this->createStackedApp(['allowedHeaders' => ['*'], 'supportsCredentials' => true]);
         $request = $this->createValidPreflightRequest();
@@ -172,10 +154,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('Access-Control-Request-Headers, Access-Control-Request-Method', $response->getHeaderLine('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_sets_allow_credentials_header_when_flag_is_set_on_valid_actual_request(): void
+    public function test_it_sets_allow_credentials_header_when_flag_is_set_on_valid_actual_request(): void
     {
         $app     = $this->createStackedApp(['supportsCredentials' => true]);
         $request = $this->createValidActualRequest();
@@ -186,10 +165,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('true', $response->getHeaderLine('Access-Control-Allow-Credentials'));
     }
 
-    /**
-     * @test
-     */
-    public function it_does_not_set_allow_credentials_header_when_flag_is_not_set_on_valid_actual_request(): void
+    public function test_it_does_not_set_allow_credentials_header_when_flag_is_not_set_on_valid_actual_request(): void
     {
         $app     = $this->createStackedApp();
         $request = $this->createValidActualRequest();
@@ -199,10 +175,7 @@ class MiddlewareTest extends TestCase
         $this->assertFalse($response->hasHeader('Access-Control-Allow-Credentials'));
     }
 
-    /**
-     * @test
-     */
-    public function it_sets_exposed_headers_when_configured_on_actual_request(): void
+    public function test_it_sets_exposed_headers_when_configured_on_actual_request(): void
     {
         $app     = $this->createStackedApp(['exposedHeaders' => ['x-exposed-header', 'x-another-exposed-header']]);
         $request = $this->createValidActualRequest();
@@ -213,10 +186,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('x-exposed-header, x-another-exposed-header', $response->getHeaderLine('Access-Control-Expose-Headers'));
     }
 
-    /**
-     * @test
-     */
-    public function it_adds_a_vary_header_when_wildcard_and_supports_credentials(): void
+    public function test_it_adds_a_vary_header_when_wildcard_and_supports_credentials(): void
     {
         $app = $this->createStackedApp([
             'allowedOrigins' => ['*'],
@@ -230,10 +200,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('Origin', $response->getHeaderLine('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_adds_multiple_vary_header_when_wildcard_and_supports_credentials(): void
+    public function test_it_adds_multiple_vary_header_when_wildcard_and_supports_credentials(): void
     {
         $app = $this->createStackedApp([
             'allowedOrigins' => ['*'],
@@ -248,10 +215,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('Origin, Access-Control-Request-Method', $response->getHeaderLine('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_adds_a_vary_header_when_has_origin_patterns(): void
+    public function test_it_adds_a_vary_header_when_has_origin_patterns(): void
     {
         $app = $this->createStackedApp([
             'allowedOrigins' => ['/l(o|0)calh(o|0)st/']
@@ -264,10 +228,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('Origin', $response->getHeaderLine('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_doesnt_add_a_vary_header_when_wilcard_origins(): void
+    public function test_it_doesnt_add_a_vary_header_when_wilcard_origins(): void
     {
         $app      = $this->createStackedApp([
             'allowedOrigins' => ['*', 'http://localhost']
@@ -279,10 +240,7 @@ class MiddlewareTest extends TestCase
         $this->assertFalse($response->hasHeader('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_doesnt_add_a_vary_header_when_simple_origins(): void
+    public function test_it_doesnt_add_a_vary_header_when_simple_origins(): void
     {
         $app = $this->createStackedApp([
             'allowedOrigins' => ['http://localhost']
@@ -295,10 +253,7 @@ class MiddlewareTest extends TestCase
         $this->assertFalse($response->hasHeader('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_adds_a_vary_header_when_multiple_origins(): void
+    public function test_it_adds_a_vary_header_when_multiple_origins(): void
     {
         $app = $this->createStackedApp([
             'allowedOrigins' => ['http://localhost', 'http://example.com']
@@ -312,10 +267,9 @@ class MiddlewareTest extends TestCase
     }
 
     /**
-     * @test
      * @see http://www.w3.org/TR/cors/index.html#resource-implementation
      */
-    public function it_appends_an_existing_vary_header(): void
+    public function test_it_appends_an_existing_vary_header(): void
     {
         $app      = $this->createStackedApp(
             [
@@ -334,10 +288,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('Content-Type, Origin', $response->getHeaderLine('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_returns_access_control_headers_on_cors_request(): void
+    public function test_it_returns_access_control_headers_on_cors_request(): void
     {
         $app      = $this->createStackedApp();
         $request  = $this->createValidActualRequest();
@@ -348,10 +299,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('http://localhost', $response->getHeaderLine('Access-Control-Allow-Origin'));
     }
 
-    /**
-     * @test
-     */
-    public function it_returns_access_control_headers_on_cors_request_with_pattern_origin(): void
+    public function test_it_returns_access_control_headers_on_cors_request_with_pattern_origin(): void
     {
         $app = $this->createStackedApp([
             'allowedOrigins' => ['/l(o|0)calh(o|0)st/'],
@@ -366,10 +314,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('Origin', $response->getHeaderLine('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_adds_vary_headers_on_preflight_non_preflight_options(): void
+    public function test_it_adds_vary_headers_on_preflight_non_preflight_options(): void
     {
         $app      = $this->createStackedApp();
         $request  = new ServerRequest('OPTIONS', 'http://localhost');
@@ -379,10 +324,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('Access-Control-Request-Method', $response->getHeaderLine('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_returns_access_control_headers_on_valid_preflight_request(): void
+    public function test_it_returns_access_control_headers_on_valid_preflight_request(): void
     {
         $app     = $this->createStackedApp();
         $request = $this->createValidPreflightRequest();
@@ -394,10 +336,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('Access-Control-Request-Method', $response->getHeaderLine('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_does_not_allow_request_with_origin_not_allowed(): void
+    public function test_it_does_not_allow_request_with_origin_not_allowed(): void
     {
         $app = $this->createStackedApp([
             'allowedOrigins' => ['http://notlocalhost']
@@ -409,10 +348,7 @@ class MiddlewareTest extends TestCase
         $this->assertNotContains($request->getHeaderLine('Origin'), $response->getHeader('Access-Control-Allow-Origin'));
     }
 
-    /**
-     * @test
-     */
-    public function it_does_not_modify_request_with_pattern_origin_not_allowed(): void
+    public function test_it_does_not_modify_request_with_pattern_origin_not_allowed(): void
     {
         $app = $this->createStackedApp([
             'allowedOrigins' => ['/l\dcalh\dst/']
@@ -424,10 +360,7 @@ class MiddlewareTest extends TestCase
         $this->assertNotContains($request->getHeaderLine('Origin'), $response->getHeader('Access-Control-Allow-Origin'));
     }
 
-    /**
-     * @test
-     */
-    public function it_allow_methods_on_valid_preflight_request(): void
+    public function test_it_allow_methods_on_valid_preflight_request(): void
     {
         $app     = $this->createStackedApp(['allowedMethods' => ['get', 'put']]);
         $request = $this->createValidPreflightRequest();
@@ -439,10 +372,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('get, put', $response->getHeaderLine('Access-Control-Allow-Methods'));
     }
 
-    /**
-     * @test
-     */
-    public function it_returns_valid_preflight_request_with_allow_methods_all(): void
+    public function test_it_returns_valid_preflight_request_with_allow_methods_all(): void
     {
         $app     = $this->createStackedApp(['allowedMethods' => ['*']]);
         $request = $this->createValidPreflightRequest();
@@ -455,10 +385,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('Access-Control-Request-Method', $response->getHeaderLine('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_returns_valid_preflight_request_with_allow_methods_all_credentials(): void
+    public function test_it_returns_valid_preflight_request_with_allow_methods_all_credentials(): void
     {
         $app     = $this->createStackedApp(['allowedMethods' => ['*'], 'supportsCredentials' => true]);
         $request = $this->createValidPreflightRequest();
@@ -472,10 +399,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('Access-Control-Request-Method', $response->getHeaderLine('Vary'));
     }
 
-    /**
-     * @test
-     */
-    public function it_returns_ok_on_valid_preflight_request_with_requested_headers_allowed(): void
+    public function test_it_returns_ok_on_valid_preflight_request_with_requested_headers_allowed(): void
     {
         $app            = $this->createStackedApp();
         $requestHeaders = 'X-Allowed-Header, x-other-allowed-header';
@@ -491,10 +415,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('x-allowed-header, x-other-allowed-header', $response->getHeaderLine('Access-Control-Allow-Headers'));
     }
 
-    /**
-     * @test
-     */
-    public function it_sets_allow_credentials_header_when_flag_is_set_on_valid_preflight_request(): void
+    public function test_it_sets_allow_credentials_header_when_flag_is_set_on_valid_preflight_request(): void
     {
         $app     = $this->createStackedApp(['supportsCredentials' => true]);
         $request = $this->createValidPreflightRequest();
@@ -505,10 +426,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('true', $response->getHeaderLine('Access-Control-Allow-Credentials'));
     }
 
-    /**
-     * @test
-     */
-    public function it_does_not_set_allow_credentials_header_when_flag_is_not_set_on_valid_preflight_request(): void
+    public function test_it_does_not_set_allow_credentials_header_when_flag_is_not_set_on_valid_preflight_request(): void
     {
         $app     = $this->createStackedApp();
         $request = $this->createValidPreflightRequest();
@@ -518,10 +436,7 @@ class MiddlewareTest extends TestCase
         $this->assertFalse($response->hasHeader('Access-Control-Allow-Credentials'));
     }
 
-    /**
-     * @test
-     */
-    public function it_sets_max_age_when_set(): void
+    public function test_it_sets_max_age_when_set(): void
     {
         $app     = $this->createStackedApp(['maxAge' => 42]);
         $request = $this->createValidPreflightRequest();
@@ -532,10 +447,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals(42, $response->getHeaderLine('Access-Control-Max-Age'));
     }
 
-    /**
-     * @test
-     */
-    public function it_sets_max_age_when_zero(): void
+    public function test_it_sets_max_age_when_zero(): void
     {
         $app     = $this->createStackedApp(['maxAge' => 0]);
         $request = $this->createValidPreflightRequest();
@@ -546,10 +458,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals(0, $response->getHeaderLine('Access-Control-Max-Age'));
     }
 
-    /**
-     * @test
-     */
-    public function it_doesnt_set_max_age_when_false(): void
+    public function test_it_doesnt_set_max_age_when_false(): void
     {
         $app     = $this->createStackedApp(['maxAge' => null]);
         $request = $this->createValidPreflightRequest();
@@ -559,10 +468,7 @@ class MiddlewareTest extends TestCase
         $this->assertFalse($response->hasHeader('Access-Control-Max-Age'));
     }
 
-    /**
-     * @test
-     */
-    public function it_skips_empty_access_control_request_header(): void
+    public function test_it_skips_empty_access_control_request_header(): void
     {
         $app     = $this->createStackedApp();
         $request = $this->createValidPreflightRequest();
@@ -572,10 +478,7 @@ class MiddlewareTest extends TestCase
         $this->assertEquals(204, $response->getStatusCode());
     }
 
-    /**
-     * @test
-     */
-    public function it_doesnt_set_access_control_allow_origin_without_origin(): void
+    public function test_it_doesnt_set_access_control_allow_origin_without_origin(): void
     {
         $app     = $this->createStackedApp([
             'allowedOrigins'      => ['*'],
