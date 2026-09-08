@@ -7,8 +7,6 @@ PHP interoperable application, utilizing the PSR-7 and PSR-15 standards.
 
 It attempts to implement the [W3C Recommendation](http://www.w3.org/TR/cors/) for cross-origin resource sharing.
 
-Build status: ![.github/workflows/run-tests.yml](https://github.com/compwright/psr-cors/workflows/.github/workflows/run-tests.yml/badge.svg)
-
 ## Installation
 
 Require `compwright/psr-cors` using composer.
