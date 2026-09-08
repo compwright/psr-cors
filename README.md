@@ -1,5 +1,7 @@
 # compwright/psr-cors
 
+[![.github/workflows/run-tests.yml](https://github.com/compwright/psr-cors/actions/workflows/run-tests.yml/badge.svg)](https://github.com/compwright/psr-cors/actions/workflows/run-tests.yml)
+
 Library and middleware enabling cross-origin resource sharing (CORS) for your
 PHP interoperable application, utilizing the PSR-7 and PSR-15 standards.
 
