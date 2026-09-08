@@ -288,6 +288,72 @@ class MiddlewareTest extends TestCase
         $this->assertEquals('Content-Type, Origin', $response->getHeaderLine('Vary'));
     }
 
+    /**
+     * @see http://www.w3.org/TR/cors/index.html#resource-implementation
+     */
+    public function test_it_doesnt_append_an_existing_vary_header_when_exists()
+    {
+        $app      = $this->createStackedApp(
+            [
+                'allowedOrigins' => ['*'],
+                'supportsCredentials' => true,
+            ],
+            [
+                'Vary' => 'Content-Type, Origin'
+            ]
+        );
+        $request  = $this->createValidActualRequest();
+
+        $response = $app->handle($request);
+
+        $this->assertTrue($response->hasHeader('Vary'));
+        $this->assertEquals(['Content-Type, Origin'], $response->getHeader('Vary'));
+    }
+
+    /**
+     * @see http://www.w3.org/TR/cors/index.html#resource-implementation
+     */
+    public function test_it_appends_an_existing_vary_header_when_multiple()
+    {
+        $app      = $this->createStackedApp(
+            [
+                'allowedOrigins' => ['*'],
+                'supportsCredentials' => true,
+            ],
+            [
+                'Vary' => ['Content-Type', 'Referer'],
+            ]
+        );
+        $request  = $this->createValidActualRequest();
+
+        $response = $app->handle($request);
+
+        $this->assertTrue($response->hasHeader('Vary'));
+        $this->assertEquals(['Content-Type' ,'Referer', 'Origin'], $response->getHeader('Vary'));
+    }
+
+    /**
+     * @see http://www.w3.org/TR/cors/index.html#resource-implementation
+     */
+    public function test_it_doesnt_append_an_existing_vary_header_when_exists_multiple()
+    {
+        $app      = $this->createStackedApp(
+            [
+                'allowedOrigins' => ['*'],
+                'supportsCredentials' => true,
+            ],
+            [
+                'Vary' => ['Content-Type', 'Referer', 'Origin'],
+            ]
+        );
+        $request  = $this->createValidActualRequest();
+
+        $response = $app->handle($request);
+
+        $this->assertTrue($response->hasHeader('Vary'));
+        $this->assertEquals(['Content-Type' ,'Referer', 'Origin'], $response->getHeader('Vary'));
+    }
+
     public function test_it_returns_access_control_headers_on_cors_request(): void
     {
         $app      = $this->createStackedApp();

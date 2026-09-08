@@ -164,8 +164,9 @@ class Cors
             return $response->withHeader('Vary', $header);
         }
 
-        if (!in_array($header, $response->getHeader('Vary'))) {
-            return $response->withHeader('Vary', [...$response->getHeader('Vary'), $header]);
+        $varyOn = array_map('trim', explode(',', $response->getHeaderLine('Vary')));
+        if (!in_array($header, $varyOn)) {
+            return $response->withHeader('Vary', [...$varyOn, $header]);
         }
 
         return $response;
